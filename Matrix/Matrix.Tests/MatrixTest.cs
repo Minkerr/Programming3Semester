@@ -1,6 +1,6 @@
 namespace Matrix.Tests;
 
-public class MatrixSimpleTests
+public class MatrixTests
 {
     [SetUp]
     public void Setup()
@@ -54,5 +54,17 @@ public class MatrixSimpleTests
         Matrix result = new("matrix4.txt");
         // assert
         CollectionAssert.AreEqual(result.matrix, expected.matrix);
+    }
+    
+    [Test]
+    public void ConcurrentMultiply_shouldWorkLikeMultiply()
+    {
+        Matrix first = new(50, 50);
+        Matrix second = new(50, 50);
+        // act
+        var resultConcurrent = first.ConcurrentMultiply(second);
+        var resultSimple = first.ConcurrentMultiply(second);
+        // assert
+        CollectionAssert.AreEqual(resultSimple.matrix, resultConcurrent.matrix);
     }
 }
