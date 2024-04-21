@@ -2,6 +2,9 @@ using System.Text;
 
 namespace Matrix;
 
+/// <summary>
+/// Сlass that implements matrices with a multiplication operation
+/// </summary>
 public class Matrix
 {
     public int[,] matrix { get; }
@@ -9,6 +12,9 @@ public class Matrix
     private int columns;
     private static readonly int threadNumber = 8;
 
+    /// <summary>
+    /// Random constructor
+    /// </summary>
     public Matrix(int rows, int columns)
     {
         this.rows = rows;
@@ -24,6 +30,9 @@ public class Matrix
         }
     }
     
+    /// <summary>
+    /// Constructor by 2d-array
+    /// </summary>
     public Matrix(int[,] matrix)
     {
         this.matrix = matrix;
@@ -31,6 +40,9 @@ public class Matrix
         columns = matrix.GetLength(1);
     }
 
+    /// <summary>
+    /// Constructor by matrix from file 
+    /// </summary>
     public Matrix(string filePath)
     {
         var input = File.ReadAllLines(filePath);
@@ -48,6 +60,9 @@ public class Matrix
         }
     }
     
+    /// <summary>
+    /// Write matrix to file
+    /// </summary>
     public void WriteToFile(string filePath)
     {
         string[] matrixToWrite = new string[rows];
@@ -64,6 +79,9 @@ public class Matrix
         File.WriteAllLines(filePath, matrixToWrite);
     }
 
+    /// <summary>
+    /// Simple matrix multiplication
+    /// </summary>
     public Matrix Multiply(Matrix another)
     {
         var resultMatrix = new int[this.rows, another.columns];
@@ -81,6 +99,9 @@ public class Matrix
         return new Matrix(resultMatrix);
     }
 
+    /// <summary>
+    /// Concurrent matrix multiplication
+    /// </summary>
     public Matrix ConcurrentMultiply(Matrix another)
     {
         var resultMatrix = new int[this.rows, another.columns];
