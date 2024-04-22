@@ -9,9 +9,9 @@ namespace MyThreadPool;
 /// </summary>
 public class MyThreadPool
 {
-    private Thread[] threads;
-    private readonly ConcurrentQueue<Action> tasks;
     private readonly CancellationTokenSource shutdownCancellationTokenSource;
+    private readonly ConcurrentQueue<Action> tasks;
+    private Thread[] threads;
 
     public MyThreadPool(int threadNumber)
     {
@@ -34,13 +34,13 @@ public class MyThreadPool
             threads[i].Start();
         }
     }
-    
+
     /// <summary>
     /// Add task to pool for executing
     /// </summary>
     public IMyTask<TResult> ExecuteTask<TResult>(Func<TResult> func)
     {
-        var task = new MyTask<TResult>(func, shutdownCancellationTokenSource.Token);
+        var task = new MyTask<TResult>(func, shutdownCancellationTokenSource.Token, this);
         tasks.Enqueue(() => task.Execute());
         return task;
     }
@@ -57,5 +57,4 @@ public class MyThreadPool
             thread.Join();
         }
     }
-    
 }

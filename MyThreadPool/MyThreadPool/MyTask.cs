@@ -12,11 +12,13 @@ public class MyTask<TResult> : IMyTask<TResult>
     private Exception? exception;
     private TResult result;
     private CancellationToken shutdownToken;
+    private MyThreadPool threadPool;
 
-    public MyTask(Func<TResult> func, CancellationToken token)
+    public MyTask(Func<TResult> func, CancellationToken token, MyThreadPool pool)
     {
         this.func = func;
         shutdownToken = token;
+        threadPool = pool;
     }
 
     /// <summary>
@@ -43,9 +45,15 @@ public class MyTask<TResult> : IMyTask<TResult>
         } 
     }
 
+    /// <summary>
+    /// Run another task after executing task.
+    /// </summary>
     public IMyTask<TNewResult> ContinueWith<TNewResult>(Func<TResult, TNewResult> continueMethod)
     {
-        throw new NotImplementedException();
+        var newFunc = () => continueMethod(Result);
+        var task = new MyTask<TNewResult>(newFunc, shutdownToken, threadPool);
+        threadPool.ExecuteTask(newFunc);
+        return task;
     }
     
     /// <summary>

@@ -68,4 +68,14 @@ public class Tests
         IMyTask<int> task = threadPool.ExecuteTask(() => 2 / x);
         threadPool.Shutdown();
     }
+    
+    [Test]
+    public void ThreadPool_shouldExecuteContinuingTasks()
+    {
+        MyThreadPool threadPool = new(8);
+        IMyTask<int> task = threadPool.ExecuteTask(() => 2 * 2).ContinueWith(x => x + 1);
+        Thread.Sleep(1000);
+        threadPool.Shutdown();
+        Assert.That(task.Result, Is.EqualTo(5));
+    }
 }
