@@ -38,7 +38,7 @@ public class MyThreadPool
     /// <summary>
     /// Add task to pool for executing
     /// </summary>
-    public IMyTask<TResult> ExecuteTask<TResult>(Func<TResult> func)
+    public IMyTask<TResult> Submit<TResult>(Func<TResult> func)
     {
         var task = new MyTask<TResult>(func, shutdownCancellationTokenSource.Token, this);
         tasks.Enqueue(() => task.Execute());

@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Concurrent;
 using System.Threading;
 
 namespace MyThreadPool;
@@ -13,6 +14,7 @@ public class MyTask<TResult> : IMyTask<TResult>
     private TResult result;
     private CancellationToken shutdownToken;
     private MyThreadPool threadPool;
+    private readonly ConcurrentStack<Action> continuingTasks;
 
     public MyTask(Func<TResult> func, CancellationToken token, MyThreadPool pool)
     {
@@ -50,10 +52,9 @@ public class MyTask<TResult> : IMyTask<TResult>
     /// </summary>
     public IMyTask<TNewResult> ContinueWith<TNewResult>(Func<TResult, TNewResult> continueMethod)
     {
+        threadPool.Submit(func);
         var newFunc = () => continueMethod(Result);
-        var task = new MyTask<TNewResult>(newFunc, shutdownToken, threadPool);
-        threadPool.ExecuteTask(newFunc);
-        return task;
+        return threadPool.Submit(newFunc);
     }
     
     /// <summary>

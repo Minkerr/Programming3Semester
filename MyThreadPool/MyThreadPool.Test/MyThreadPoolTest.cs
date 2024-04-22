@@ -24,7 +24,7 @@ public class Tests
     public void ThreadPool_shouldExecuteSimpleExpression()
     {
         MyThreadPool threadPool = new(2);
-        IMyTask<int> task = threadPool.ExecuteTask(() => 2 + 2);
+        IMyTask<int> task = threadPool.Submit(() => 2 + 2);
         threadPool.Shutdown();
         Assert.That(task.Result, Is.EqualTo(4));
     }
@@ -36,7 +36,7 @@ public class Tests
         var tasks = new IMyTask<int>[20];
         for (int i = 0; i < 20; i++)
         {
-            tasks[i] = threadPool.ExecuteTask(CalculationImitation);
+            tasks[i] = threadPool.Submit(CalculationImitation);
         }
         Thread.Sleep(6000);
         threadPool.Shutdown();
@@ -54,7 +54,7 @@ public class Tests
         var tasks = new IMyTask<int>[20];
         for (int i = 0; i < 20; i++)
         {
-            tasks[i] = threadPool.ExecuteTask(CalculationImitation);
+            tasks[i] = threadPool.Submit(CalculationImitation);
         }
         threadPool.Shutdown();
     }
@@ -65,7 +65,7 @@ public class Tests
     {
         MyThreadPool threadPool = new(8);
         int x = 0;
-        IMyTask<int> task = threadPool.ExecuteTask(() => 2 / x);
+        IMyTask<int> task = threadPool.Submit(() => 2 / x);
         threadPool.Shutdown();
     }
     
@@ -73,9 +73,31 @@ public class Tests
     public void ThreadPool_shouldExecuteContinuingTasks()
     {
         MyThreadPool threadPool = new(8);
-        IMyTask<int> task = threadPool.ExecuteTask(() => 2 * 2).ContinueWith(x => x + 1);
+        IMyTask<int> task = threadPool.Submit(() => 2 * 2)
+            .ContinueWith(x => x + 1)
+            .ContinueWith(y => y * 3);
         Thread.Sleep(1000);
         threadPool.Shutdown();
-        Assert.That(task.Result, Is.EqualTo(5));
+        Assert.That(task.Result, Is.EqualTo(15));
+    }
+    
+    [Test]
+    public void ThreadPool_shouldExecuteALotOfContinuingTasks()
+    {
+        MyThreadPool threadPool = new(8);
+        IMyTask<int>[] tasks = new IMyTask<int>[20];
+        for (int i = 0; i < 20; i++)
+        {
+            tasks[i] = threadPool.Submit(() => 2 * 2)
+                .ContinueWith(x => x + 1)
+                .ContinueWith(y => y * 3)
+                .ContinueWith(z => z + 0);
+        }
+        Thread.Sleep(2000);
+        threadPool.Shutdown();
+        for (int i = 0; i < 20; i++)
+        {
+            Assert.That(tasks[i].Result, Is.EqualTo(15));
+        }
     }
 }
