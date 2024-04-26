@@ -3,7 +3,7 @@ using System;
 namespace MyThreadPool;
 
 /// <summary>
-/// Class that implement a task executed by MyThreadPool
+/// Interface for task executed by MyThreadPool
 /// </summary>
 public interface IMyTask<TResult>
 {

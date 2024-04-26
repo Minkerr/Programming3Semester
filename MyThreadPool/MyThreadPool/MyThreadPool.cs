@@ -1,6 +1,4 @@
-using System;
 using System.Collections.Concurrent;
-using System.Threading;
 
 namespace MyThreadPool;
 
@@ -9,14 +7,13 @@ namespace MyThreadPool;
 /// </summary>
 public class MyThreadPool
 {
-    private readonly CancellationTokenSource shutdownCancellationTokenSource;
-    private readonly ConcurrentQueue<Action> tasks;
+    private readonly CancellationTokenSource shutdownCancellationTokenSource = new();
+    private readonly ConcurrentQueue<Action> tasks = new();
+    private ManualResetEvent threadResetEvent = new (true); 
     private Thread[] threads;
 
     public MyThreadPool(int threadNumber)
     {
-        tasks = new ConcurrentQueue<Action>();
-        shutdownCancellationTokenSource = new CancellationTokenSource();
         threads = new Thread[threadNumber];
         for (int i = 0; i < threadNumber; i++)
         {
@@ -24,11 +21,12 @@ public class MyThreadPool
             {
                  var token = shutdownCancellationTokenSource.Token;
                  while (!token.IsCancellationRequested)
-                 {
-                    if (tasks.TryDequeue(out var task))
-                    {
-                        task.Invoke();
-                    }
+                 { 
+                     if (tasks.TryDequeue(out var task))
+                     {
+                         task.Invoke();
+                     }
+                     threadResetEvent.WaitOne();
                  }
             });
             threads[i].Start();
@@ -42,6 +40,7 @@ public class MyThreadPool
     {
         var task = new MyTask<TResult>(func, shutdownCancellationTokenSource.Token, this);
         tasks.Enqueue(() => task.Execute());
+        threadResetEvent.Set();
         return task;
     }
 

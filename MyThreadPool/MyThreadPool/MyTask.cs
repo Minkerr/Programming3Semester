@@ -1,6 +1,4 @@
-using System;
 using System.Collections.Concurrent;
-using System.Threading;
 
 namespace MyThreadPool;
 
@@ -14,6 +12,7 @@ public class MyTask<TResult> : IMyTask<TResult>
     private TResult result;
     private CancellationToken shutdownToken;
     private MyThreadPool threadPool;
+    private AutoResetEvent resultResetEvent = new (true); 
     private readonly ConcurrentStack<Action> continuingTasks;
 
     public MyTask(Func<TResult> func, CancellationToken token, MyThreadPool pool)
@@ -34,9 +33,10 @@ public class MyTask<TResult> : IMyTask<TResult>
     public TResult Result {
         get
         {
-            while (!IsCompleted)
+            if (!IsCompleted)
             {
                 shutdownToken.ThrowIfCancellationRequested();
+                resultResetEvent.WaitOne();
             }
 
             if (exception != null)
@@ -71,6 +71,8 @@ public class MyTask<TResult> : IMyTask<TResult>
             exception = e;
         }
 
+        func = null;
         IsCompleted = true;
+        resultResetEvent.Set();
     }
 }
