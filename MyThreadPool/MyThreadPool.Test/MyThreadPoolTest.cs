@@ -5,11 +5,6 @@ namespace MyThreadPool.Test;
 
 public class Tests
 {
-    [SetUp]
-    public void Setup()
-    {
-    }
-
     private int CalculationImitation()
     {
         int result = 0;
@@ -91,13 +86,13 @@ public class Tests
             tasks[i] = threadPool.Submit(() => 2 * 2)
                 .ContinueWith(x => x + 1)
                 .ContinueWith(y => y * 3)
-                .ContinueWith(z => z + 0);
+                .ContinueWith(z => z + 4);
         }
-        Thread.Sleep(2000);
+        Thread.Sleep(6000);
         threadPool.Shutdown();
         for (int i = 0; i < 20; i++)
         {
-            Assert.That(tasks[i].Result, Is.EqualTo(15));
+            Assert.That(tasks[i].Result, Is.EqualTo(19));
         }
     }
 }
