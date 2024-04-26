@@ -2,11 +2,6 @@ namespace Matrix.Tests;
 
 public class MatrixTests
 {
-    [SetUp]
-    public void Setup()
-    {
-    }
-
     [Test]
     public void Multiply_shouldMultiplyTwoSmallMatrix()
     {
@@ -16,7 +11,7 @@ public class MatrixTests
         // act
         var result = first.Multiply(second);
         // assert
-        CollectionAssert.AreEqual(result.matrix, expected.matrix);
+        CollectionAssert.AreEqual(result.MatrixArray, expected.MatrixArray);
     }
     
     [Test]
@@ -28,7 +23,7 @@ public class MatrixTests
         // act
         var result = first.ConcurrentMultiply(second);
         // assert
-        CollectionAssert.AreEqual(result.matrix, expected.matrix);
+        CollectionAssert.AreEqual(result.MatrixArray, expected.MatrixArray);
     }
     
     [Test]
@@ -40,7 +35,7 @@ public class MatrixTests
         // act
         var result = first.ConcurrentMultiply(second);
         // assert
-        CollectionAssert.AreEqual(result.matrix, expected.matrix);
+        CollectionAssert.AreEqual(result.MatrixArray, expected.MatrixArray);
     }
     
     [Test]
@@ -53,7 +48,7 @@ public class MatrixTests
         first.ConcurrentMultiply(second).WriteToFile("matrix4.txt");
         Matrix result = new("matrix4.txt");
         // assert
-        CollectionAssert.AreEqual(result.matrix, expected.matrix);
+        CollectionAssert.AreEqual(result.MatrixArray, expected.MatrixArray);
     }
     
     [Test]
@@ -65,6 +60,6 @@ public class MatrixTests
         var resultConcurrent = first.ConcurrentMultiply(second);
         var resultSimple = first.ConcurrentMultiply(second);
         // assert
-        CollectionAssert.AreEqual(resultSimple.matrix, resultConcurrent.matrix);
+        CollectionAssert.AreEqual(resultSimple.MatrixArray, resultConcurrent.MatrixArray);
     }
 }

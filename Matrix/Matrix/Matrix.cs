@@ -7,25 +7,21 @@ namespace Matrix;
 /// </summary>
 public class Matrix
 {
-    public int[,] matrix { get; }
-    private int rows;
-    private int columns;
-    private static readonly int threadNumber = 8;
+    public int[,] MatrixArray { get; }
+    private static Random random = new();
+    private static readonly int threadNumber = Environment.ProcessorCount;
 
     /// <summary>
     /// Random constructor
     /// </summary>
     public Matrix(int rows, int columns)
     {
-        this.rows = rows;
-        this.columns = columns;
-        matrix = new int[this.rows, this.columns];
-        var random = new Random();
+        MatrixArray = new int[rows, columns];
         for (int i = 0; i < rows; i++)
         {
             for (int j = 0; j < columns; j++)
             {
-                matrix[i, j] = random.Next(100);
+                MatrixArray[i, j] = random.Next(100);
             }
         }
     }
@@ -33,12 +29,8 @@ public class Matrix
     /// <summary>
     /// Constructor by 2d-array
     /// </summary>
-    public Matrix(int[,] matrix)
-    {
-        this.matrix = matrix;
-        rows = matrix.GetLength(0);
-        columns = matrix.GetLength(1);
-    }
+    public Matrix(int[,] matrixArray) => MatrixArray = matrixArray;
+    
 
     /// <summary>
     /// Constructor by matrix from file 
@@ -46,16 +38,20 @@ public class Matrix
     public Matrix(string filePath)
     {
         var input = File.ReadAllLines(filePath);
-        rows = input.Length;
-        columns = input[0].Split(" ").Length;
-        matrix = new int[rows, columns];
+        var rows = input.Length;
+        var columns = input[0].Split(" ").Length;
+        MatrixArray = new int[rows, columns];
 
         for (int i = 0; i < rows; i++)
         {
             var row = input[i].Split(" ");
+            if (row.Length != columns)
+            {
+                throw new ArgumentException();
+            }
             for (int j = 0; j < columns; j++)
             {
-                matrix[i, j] = int.Parse(row[j]);
+                MatrixArray[i, j] = int.Parse(row[j]);
             }
         }
     }
@@ -65,13 +61,15 @@ public class Matrix
     /// </summary>
     public void WriteToFile(string filePath)
     {
-        string[] matrixToWrite = new string[rows];
+        var rows = MatrixArray.GetLength(0);
+        var columns = MatrixArray.GetLength(1);
+        var matrixToWrite = new string[rows];
         for (int i = 0; i < rows; i++)
         {
-            StringBuilder row = new StringBuilder();
+            var row = new StringBuilder();
             for (int j = 0; j < columns; j++)
             {
-                row.Append(matrix[i, j]).Append(' ');
+                row.Append(MatrixArray[i, j]).Append(' ');
             }
 
             matrixToWrite[i] = row.ToString()[..(row.Length - 1)];
@@ -84,14 +82,17 @@ public class Matrix
     /// </summary>
     public Matrix Multiply(Matrix another)
     {
-        var resultMatrix = new int[this.rows, another.columns];
-        for (var i = 0; i < this.rows; i++)
+        var rows = MatrixArray.GetLength(0);
+        var columns = MatrixArray.GetLength(1);
+        var anotherColumns = another.MatrixArray.GetLength(1);
+        var resultMatrix = new int[rows, anotherColumns];
+        for (var i = 0; i < rows; i++)
         {
-            for (var j = 0; j < another.columns; j++)
+            for (var j = 0; j < anotherColumns; j++)
             {
-                for (var k = 0; k < this.columns; k++)
+                for (var k = 0; k < columns; k++)
                 {
-                    resultMatrix[i, j] += matrix[i, k] * another.matrix[k, j];
+                    resultMatrix[i, j] += MatrixArray[i, k] * another.MatrixArray[k, j];
                 }
             }
         }
@@ -104,32 +105,36 @@ public class Matrix
     /// </summary>
     public Matrix ConcurrentMultiply(Matrix another)
     {
-        var resultMatrix = new int[this.rows, another.columns];
-        Thread[] threads = new Thread[threadNumber];
-        int chunkSize = (this.rows + threadNumber - 1) / threadNumber;
-        for (int t = 0; t < threadNumber; t++)
+        var rows = MatrixArray.GetLength(0);
+        var columns = MatrixArray.GetLength(1);
+        var anotherColumns = another.MatrixArray.GetLength(1);
+        var resultMatrix = new int[rows, anotherColumns];
+        int nThread = int.Min(threadNumber, rows);
+        var threads = new Thread[nThread];
+        int chunkSize = (rows + nThread - 1) / nThread;
+        for (int t = 0; t < nThread; t++)
         {
             int localT = t;
             threads[t] = new Thread(() =>
             {
-                for (int i = localT * chunkSize; i < (localT + 1) * chunkSize && i < this.rows; i++) 
+                for (int i = localT * chunkSize; i < (localT + 1) * chunkSize && i < rows; i++) 
                 {
-                    for (int j = 0; j < another.columns; j++)
+                    for (int j = 0; j < anotherColumns; j++)
                     {
-                        for (var k = 0; k < this.columns; k++)
+                        for (var k = 0; k < columns; k++)
                         {
-                            resultMatrix[i, j] += matrix[i, k] * another.matrix[k, j];
+                            resultMatrix[i, j] += MatrixArray[i, k] * another.MatrixArray[k, j];
                         }
                     }
                 }
             });
         }
         
-        for (int i = 0; i < threadNumber; i++)
+        for (int i = 0; i < nThread; i++)
         {
             threads[i].Start();
         }
-        for (int i = 0; i < threadNumber; i++)
+        for (int i = 0; i < nThread; i++)
         {
             threads[i].Join();
         }
