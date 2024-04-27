@@ -1,0 +1,12 @@
+C:\Users\valen\RiderProjects\Programming3Semester\SimpleFTP\SimpleFTPServer\obj\Debug\net8.0\SimpleFTPServer.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\valen\RiderProjects\Programming3Semester\SimpleFTP\SimpleFTPServer\obj\Debug\net8.0\SimpleFTPServer.AssemblyInfoInputs.cache
+C:\Users\valen\RiderProjects\Programming3Semester\SimpleFTP\SimpleFTPServer\obj\Debug\net8.0\SimpleFTPServer.AssemblyInfo.cs
+C:\Users\valen\RiderProjects\Programming3Semester\SimpleFTP\SimpleFTPServer\obj\Debug\net8.0\SimpleFTPServer.csproj.CoreCompileInputs.cache
+C:\Users\valen\RiderProjects\Programming3Semester\SimpleFTP\SimpleFTPServer\obj\Debug\net8.0\SimpleFTPServer.sourcelink.json
+C:\Users\valen\RiderProjects\Programming3Semester\SimpleFTP\SimpleFTPServer\bin\Debug\net8.0\SimpleFTPServer.deps.json
+C:\Users\valen\RiderProjects\Programming3Semester\SimpleFTP\SimpleFTPServer\bin\Debug\net8.0\SimpleFTPServer.dll
+C:\Users\valen\RiderProjects\Programming3Semester\SimpleFTP\SimpleFTPServer\bin\Debug\net8.0\SimpleFTPServer.pdb
+C:\Users\valen\RiderProjects\Programming3Semester\SimpleFTP\SimpleFTPServer\obj\Debug\net8.0\SimpleFTPServer.dll
+C:\Users\valen\RiderProjects\Programming3Semester\SimpleFTP\SimpleFTPServer\obj\Debug\net8.0\refint\SimpleFTPServer.dll
+C:\Users\valen\RiderProjects\Programming3Semester\SimpleFTP\SimpleFTPServer\obj\Debug\net8.0\SimpleFTPServer.pdb
+C:\Users\valen\RiderProjects\Programming3Semester\SimpleFTP\SimpleFTPServer\obj\Debug\net8.0\ref\SimpleFTPServer.dll

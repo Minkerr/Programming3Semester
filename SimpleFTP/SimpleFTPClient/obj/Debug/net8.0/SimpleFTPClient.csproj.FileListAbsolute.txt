@@ -1,0 +1,12 @@
+C:\Users\valen\RiderProjects\Programming3Semester\SimpleFTP\SimpleFTPClient\bin\Debug\net8.0\SimpleFTPClient.deps.json
+C:\Users\valen\RiderProjects\Programming3Semester\SimpleFTP\SimpleFTPClient\bin\Debug\net8.0\SimpleFTPClient.dll
+C:\Users\valen\RiderProjects\Programming3Semester\SimpleFTP\SimpleFTPClient\bin\Debug\net8.0\SimpleFTPClient.pdb
+C:\Users\valen\RiderProjects\Programming3Semester\SimpleFTP\SimpleFTPClient\obj\Debug\net8.0\SimpleFTPClient.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\valen\RiderProjects\Programming3Semester\SimpleFTP\SimpleFTPClient\obj\Debug\net8.0\SimpleFTPClient.AssemblyInfoInputs.cache
+C:\Users\valen\RiderProjects\Programming3Semester\SimpleFTP\SimpleFTPClient\obj\Debug\net8.0\SimpleFTPClient.AssemblyInfo.cs
+C:\Users\valen\RiderProjects\Programming3Semester\SimpleFTP\SimpleFTPClient\obj\Debug\net8.0\SimpleFTPClient.csproj.CoreCompileInputs.cache
+C:\Users\valen\RiderProjects\Programming3Semester\SimpleFTP\SimpleFTPClient\obj\Debug\net8.0\SimpleFTPClient.sourcelink.json
+C:\Users\valen\RiderProjects\Programming3Semester\SimpleFTP\SimpleFTPClient\obj\Debug\net8.0\SimpleFTPClient.dll
+C:\Users\valen\RiderProjects\Programming3Semester\SimpleFTP\SimpleFTPClient\obj\Debug\net8.0\refint\SimpleFTPClient.dll
+C:\Users\valen\RiderProjects\Programming3Semester\SimpleFTP\SimpleFTPClient\obj\Debug\net8.0\SimpleFTPClient.pdb
+C:\Users\valen\RiderProjects\Programming3Semester\SimpleFTP\SimpleFTPClient\obj\Debug\net8.0\ref\SimpleFTPClient.dll
