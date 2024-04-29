@@ -37,7 +37,7 @@ public class Client(int port, string hostName)
         await writer.WriteAsync(request);
         await writer.FlushAsync();
         
-        return await ParseGetResponse(stream);
+        return ParseGetResponse(stream);
     }
     
     private static async Task<List<(string, bool)>> ParseListResponse(Stream stream)
@@ -69,35 +69,30 @@ public class Client(int port, string hostName)
         return result;
     }
 
-    private static async Task<byte[]> ParseGetResponse(Stream stream)
+    private static byte[] ParseGetResponse(Stream stream)
     {
-        var sizeList = new List<byte>();
+        var sizeParse = new List<byte>();
 
         int readByte;
         while ((readByte = stream.ReadByte()) != ' ')
         {
-            sizeList.Add((byte)readByte);
+            sizeParse.Add((byte) readByte);
         }
 
-        var size = int.Parse(Encoding.UTF8.GetString(sizeList.ToArray()));
+        var size = int.Parse(Encoding.UTF8.GetString(sizeParse.ToArray()));
 
         if (size == -1)
         {
             throw new FileNotFoundException();
         }
-
-        var buffer = new byte[1024];
-
-        var downloadedSize = 0;
+        
         List<byte> result = new();
 
-        while (downloadedSize < size)
+        for (var i = 0; i < size; ++i)
         {
-            var charsRead = await stream.ReadAsync(buffer);
-            downloadedSize += charsRead;
-            result.AddRange(buffer.Take(charsRead).ToArray());
+            result.Add((byte) stream.ReadByte());
         }
-
+        
         return result.ToArray();
     }
 }
