@@ -51,10 +51,8 @@ public class Tests
         // Arrange
         const string path = ".\\..\\..\\..\\Test\\Folder\\test.txt";
         var expected = await File.ReadAllBytesAsync(path);
-        using var stream = new MemoryStream();
         // Act
-        await client.GetAsync(path, stream);
-        var actual = stream.ToArray();
+        var actual = await client.GetAsync(path);
         // Assert
         Assert.That(actual, Is.EqualTo(expected));
     }
@@ -65,14 +63,10 @@ public class Tests
         // Arrange
         const string path = ".\\..\\..\\..\\Test\\Folder\\test.txt";
         var expected = await File.ReadAllBytesAsync(path);
-        using var stream = new MemoryStream();
         // Act
-        await clients[0].GetAsync(path, stream);
-        await clients[1].GetAsync(path, stream);
-        await clients[2].GetAsync(path, stream);
-        var actual1 = stream.ToArray();
-        var actual2 = stream.ToArray();
-        var actual3 = stream.ToArray(); 
+        var actual1 = await clients[0].GetAsync(path);
+        var actual2 = await clients[1].GetAsync(path);
+        var actual3 = await clients[2].GetAsync(path);
         // Assert
         Assert.Multiple(() =>
         {

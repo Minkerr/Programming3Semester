@@ -6,15 +6,12 @@ namespace SimpleFTPServer;
 /// <summary>
 /// Class that implements server with two simple file operations
 /// </summary>
-public class Server
+public class Server(int port)
 {
-    private readonly TcpListener listener;
+    private readonly TcpListener listener = new(IPAddress.Any, port);
     private readonly CancellationTokenSource tokenSource = new();
     private readonly List<TcpClient> clients = new();
     private readonly RequestHandler handler = new();
-    
-    public Server(int port)
-        => listener = new TcpListener(IPAddress.Any, port);
 
     /// <summary>
     /// Starts work of server.

@@ -3,18 +3,8 @@ using System.Text;
 
 namespace SimpleFTPClient;
 
-public class Client
+public class Client(int port, string hostName)
 {
-    private readonly int port;
-    private readonly string hostName;
-    private const int bufferSize = 1024;
- 
-    public Client(int port, string hostName)
-    {
-        this.port = port;
-        this.hostName = hostName;
-    }
-
     /// <summary>
     /// Get list of files and subdirectories in the path.
     /// </summary>
@@ -35,7 +25,7 @@ public class Client
     /// <summary>
     /// Download file in bytes
     /// </summary>
-    public async Task GetAsync(string path, Stream outStream)
+    public async Task<byte[]> GetAsync(string path)
     {
         using var client = new TcpClient();
         await client.ConnectAsync(hostName, port);
@@ -47,23 +37,18 @@ public class Client
         await writer.WriteAsync(request);
         await writer.FlushAsync();
         
-        await ParseGetResponse(stream, outStream);
+        return await ParseGetResponse(stream);
     }
     
     private static async Task<List<(string, bool)>> ParseListResponse(Stream stream)
     {
-        var buffer = new byte[bufferSize];
-        var builder = new StringBuilder();
-        int bytesRead;
-
-        do
+        using var reader = new StreamReader(stream);
+        var stringResponse = await reader.ReadLineAsync();
+        if (stringResponse == null)
         {
-            bytesRead = await stream.ReadAsync(buffer);
-            builder.Append(Encoding.UTF8.GetString(buffer, 0, bytesRead));
+            throw new NullReferenceException();
         }
-        while (buffer[bytesRead - 1] != '\n');
-        
-        var response = builder.ToString().Split();
+        var response = stringResponse.Split();
 
         if (response[0] == "-1")
         {
@@ -74,18 +59,17 @@ public class Client
 
         var result = new List<(string, bool)>();
 
-        for (var i = 1; i <= size; ++i)
+        for (var i = 0; i < size; ++i)
         {
-            var fileName = response[(2 * i) - 1];
-            var isDirectory = response[2 * i] == "true";
-
+            var fileName = response[2 * i + 1];
+            var isDirectory = response[2 * i + 2] == "true";
             result.Add((fileName, isDirectory));
         }
 
-        return result.ToList();
+        return result;
     }
 
-    private static async Task ParseGetResponse(Stream stream, Stream outStream)
+    private static async Task<byte[]> ParseGetResponse(Stream stream)
     {
         var sizeList = new List<byte>();
 
@@ -102,15 +86,18 @@ public class Client
             throw new FileNotFoundException();
         }
 
-        var buffer = new byte[bufferSize];
+        var buffer = new byte[1024];
 
         var downloadedSize = 0;
+        List<byte> result = new();
 
         while (downloadedSize < size)
         {
             var charsRead = await stream.ReadAsync(buffer);
             downloadedSize += charsRead;
-            await outStream.WriteAsync(buffer.Take(charsRead).ToArray());
+            result.AddRange(buffer.Take(charsRead).ToArray());
         }
+
+        return result.ToArray();
     }
 }
