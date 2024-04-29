@@ -1,5 +1,6 @@
 using System.Text;
 using SimpleFTPClient;
+using SimpleFTPServer;
 
 namespace SimpleFTP.Tests;
 

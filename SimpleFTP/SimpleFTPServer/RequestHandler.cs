@@ -1,6 +1,6 @@
 using System.Text;
 
-namespace SimpleFTP;
+namespace SimpleFTPServer;
 
 public class RequestHandler
 {
@@ -17,7 +17,7 @@ public class RequestHandler
                 await ListAsync(splitRequest[1], stream);
                 break;
             case "2":
-                await GetFileAsync(splitRequest[1], stream);
+                await GetAsync(splitRequest[1], stream);
                 break;
             default:
                 await SendResponse("Incorrect Input", stream);
@@ -58,7 +58,7 @@ public class RequestHandler
     /// <summary>
     /// Download file from server.
     /// </summary>
-    private async Task GetFileAsync(string path, Stream stream)
+    private async Task GetAsync(string path, Stream stream)
     {
         if (!File.Exists(path))
         {

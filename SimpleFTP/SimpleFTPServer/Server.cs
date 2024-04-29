@@ -1,7 +1,7 @@
 using System.Net;
 using System.Net.Sockets;
 
-namespace SimpleFTP;
+namespace SimpleFTPServer;
 
 /// <summary>
 /// Class that implements server with two simple file operations
@@ -22,13 +22,13 @@ public class Server
     public async Task Start()
     {
         listener.Start();
-        List<Task> tasks = new();
+        List<Task> tasks = [];
         
         while (!tokenSource.IsCancellationRequested)
         {
             var client = await listener.AcceptTcpClientAsync(tokenSource.Token);
             clients.Add(client);
-            tasks.Add(HandleRequests(client, tokenSource.Token));
+            tasks.Add(ProcessClient(client, tokenSource.Token));
         }
         
         Task.WaitAll(tasks.ToArray());
@@ -48,12 +48,11 @@ public class Server
         tokenSource.Cancel();
     }
 
-    private Task HandleRequests(TcpClient client, CancellationToken token)
+    private Task ProcessClient(TcpClient client, CancellationToken token)
     {
         return Task.Run(async () =>
         {
             await using var stream = client.GetStream();
-
             using var streamReader = new StreamReader(stream);
             
             while (!token.IsCancellationRequested)
@@ -64,13 +63,8 @@ public class Server
                     handler.RecognizeCommand(request, stream);
                 }
             }
-            Disconnect(client);
+            client.Close();
+            clients.Remove(client);
         }, token);
-    }
-
-    private void Disconnect(TcpClient client)
-    {
-        client.Close();
-        clients.Remove(client);
     }
 }
