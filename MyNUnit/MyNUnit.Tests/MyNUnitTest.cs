@@ -7,13 +7,13 @@ namespace Project.Tests;
 public class Tests
 {
     [Test]
-    public void TestRunner_shouldRunAllTests()
+    public async Task TestRunner_shouldRunAllTests()
     {
         // arrange
         const string path = @"..\..\..\..\Project.Tests\bin\Debug\net8.0\Project.Tests.dll";
         var assembly = Assembly.LoadFrom(path);
         // act
-        var act = TestRunner.RunTestsInAssembly(assembly);
+        var act = await TestRunner.RunTestsInAssembly(assembly);
         act.Sort(new TestResultComparer());
         // assert
         Assert.Multiple(() =>
@@ -36,13 +36,13 @@ public class Tests
     }
     
     [Test]
-    public void TestRunner_shouldIgnoreTestsAfterFailedBeforeClassMethod()
+    public async Task TestRunner_shouldIgnoreTestsAfterFailedBeforeClassMethod()
     {
         // arrange
         const string path = @"..\..\..\..\ProjectFailedBefore.Tests\bin\Debug\net8.0\ProjectFailedBefore.Tests.dll";
         var assembly = Assembly.LoadFrom(path);
         // act
-        var act = TestRunner.RunTestsInAssembly(assembly);
+        var act = await TestRunner.RunTestsInAssembly(assembly);
         // assert
         Assert.That(act[0].IsIgnored, Is.True);
     }
