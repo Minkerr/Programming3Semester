@@ -34,8 +34,8 @@ public static class TestRunner
     /// </summary>
     public static List<TestResult> RunTestsInAssembly(Assembly assembly)
     {
-        var results = new ConcurrentBag<TestResult>();
-
+        var tasks = new List<Task<TestResult>>();
+        
         foreach (var type in assembly.GetTypes())
         {
             var testMethods = type.GetMethods()
@@ -53,17 +53,19 @@ public static class TestRunner
             {
                 shouldRunTestsFlag = false;
             }
-                
-            Parallel.ForEach(testMethods, method =>
+            
+            foreach (var method in testMethods)
             {
-                var result = RunTest(type, method, shouldRunTestsFlag);
-                results.Add(result);
-            });
+                var task = Task.Run(() => RunTest(type, method, shouldRunTestsFlag));
+                tasks.Add(task);
+            }
+
+            Task.WhenAll(tasks).Wait();
 
             InvokeMethodsByAttribute(type, typeof(AfterClassAttribute));
         }
 
-        return results.ToList();
+        return tasks.Select(t => t.Result).ToList();
     }
 
     private static TestResult RunTest(Type type, MethodInfo testMethod, bool shouldRunTestsFlag)
