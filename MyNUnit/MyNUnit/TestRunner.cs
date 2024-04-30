@@ -5,8 +5,14 @@ using MyNUnit.Attributes;
 
 namespace MyNUnit;
 
+/// <summary>
+/// Class that execute all tests in given directory
+/// </summary>
 public static class TestRunner
 {
+    /// <summary>
+    /// Run all tests in all assemblies in given directory
+    /// </summary>
     public static void RunTestsFromDirectory(string path)
     {
         if (!Directory.Exists(path))
@@ -23,6 +29,9 @@ public static class TestRunner
     private static List<Assembly> GetAssembliesFromDirectory(string path)
         => Directory.GetFiles(path, "*.dll").Select(Assembly.LoadFrom).ToList();
     
+    /// <summary>
+    /// Get results of running tests in given assembly 
+    /// </summary>
     public static List<TestResult> RunTestsInAssembly(Assembly assembly)
     {
         var results = new ConcurrentBag<TestResult>();
@@ -38,7 +47,7 @@ public static class TestRunner
             var shouldRunTestsFlag = true;
             try
             {
-                InvokeMethodsWithAttribute(type, typeof(BeforeClassAttribute));
+                InvokeMethodsByAttribute(type, typeof(BeforeClassAttribute));
             }
             catch (NotStaticAfterOrBeforeClassMethod)
             {
@@ -51,7 +60,7 @@ public static class TestRunner
                 results.Add(result);
             });
 
-            InvokeMethodsWithAttribute(type, typeof(AfterClassAttribute));
+            InvokeMethodsByAttribute(type, typeof(AfterClassAttribute));
         }
 
         return results.ToList();
@@ -84,7 +93,7 @@ public static class TestRunner
 
         isIgnored = false;
         
-        InvokeMethodsWithAttribute(type, typeof(BeforeAttribute));
+        InvokeMethodsByAttribute(type, typeof(BeforeAttribute));
 
         var stopwatch = new Stopwatch();
         stopwatch.Start();
@@ -107,13 +116,13 @@ public static class TestRunner
         }
         stopwatch.Stop();
         
-        InvokeMethodsWithAttribute(type, typeof(AfterAttribute));
+        InvokeMethodsByAttribute(type, typeof(AfterAttribute));
         duration = stopwatch.Elapsed.TotalMilliseconds;
         
         return new TestResult(testMethod.Name, isPassed, isIgnored, duration, exceptionMessage, ignoreMessage);
     }
 
-    private static void InvokeMethodsWithAttribute(Type type, Type attributeType)
+    private static void InvokeMethodsByAttribute(Type type, Type attributeType)
     {
         foreach (var method in type.GetMethods())
         {
