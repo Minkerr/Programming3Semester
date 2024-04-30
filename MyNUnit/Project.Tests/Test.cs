@@ -56,7 +56,7 @@ public class Test
         throw new SystemException("Expected exception");
     }
 
-    [MyTest(Ignore = "Ignored test")]
+    [MyTest(Ignore = "Test message for ignored test")]
     public void IgnoredTest()
     {
         Console.WriteLine("IgnoredTest is running");

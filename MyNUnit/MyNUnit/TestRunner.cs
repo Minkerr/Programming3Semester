@@ -104,14 +104,16 @@ public static class TestRunner
         }
         catch (Exception e)
         {
-            if (!(testArgument?.Expected is not null && e.InnerException?.GetType() == testArgument.Expected))
+            if (e.InnerException?.GetType() == typeof(AssertFailedException))
+            {
+                isPassed = false;
+                exceptionMessage = "Test failed";
+
+            }
+            else if (!(testArgument?.Expected is not null && e.InnerException?.GetType() == testArgument.Expected))
             {
                 isPassed = false;
                 exceptionMessage = e.InnerException?.Message;
-            }
-            else if (e.InnerException?.GetType() == typeof(AssertFailedException))
-            {
-                isPassed = false;
             }
         }
         stopwatch.Stop();

@@ -20,7 +20,7 @@ public record TestResult(
         var passedCount = 0;
         var failedCount = 0;
         var ignoredCount = 0;
-        Console.WriteLine("\n================================");
+        Console.WriteLine("\n================================================================");
         Console.WriteLine("Tests running result:\n");
         
         foreach (var result in results)
@@ -41,16 +41,16 @@ public record TestResult(
             {
                 Console.WriteLine($"Failed: {result.TestName}");
                 Console.WriteLine($"Duration: {result.Duration} ms");
-                Console.WriteLine(result.ExceptionMessage != null ? $"Exception: {result.ExceptionMessage}\n" : "");
+                Console.WriteLine(result.ExceptionMessage != null ? $"Message: {result.ExceptionMessage}\n" : "");
                 failedCount++;
             }
         }
 
-        Console.WriteLine($"Total result: {results.Count}\n" +
-                          $"Passed: {passedCount}\n" +
-                          $"Failed: {failedCount}\n" +
-                          $"Ignored: {ignoredCount}");
-        Console.WriteLine("\n================================\n");
+        Console.WriteLine($"Total test number: {results.Count}");
+        Console.WriteLine($"Passed tests: {passedCount}");
+        Console.WriteLine($"Failed tests: {failedCount}");
+        Console.WriteLine($"Ignored tests: {ignoredCount}");
+        Console.WriteLine("\n================================================================\n");
     }
 }
 
