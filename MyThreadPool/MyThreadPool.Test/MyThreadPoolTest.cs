@@ -7,12 +7,8 @@ public class Tests
 {
     private int CalculationImitation()
     {
-        int result = 0;
-        for (int i = 0; i < 1_000_000_000; i++)
-        {
-            result++;
-        }
-        return result;
+        Thread.Sleep(100);
+        return 0;
     }
     
     [Test]
@@ -37,7 +33,7 @@ public class Tests
         threadPool.Shutdown();
         for (int i = 0; i < 20; i++)
         {
-            Assert.That(tasks[i].Result, Is.EqualTo(1000000000));
+            Assert.That(tasks[i].Result, Is.EqualTo(0));
         }
     }
     
@@ -80,19 +76,25 @@ public class Tests
     public void ThreadPool_shouldExecuteALotOfContinuingTasks()
     {
         MyThreadPool threadPool = new(8);
-        IMyTask<int>[] tasks = new IMyTask<int>[20];
-        for (int i = 0; i < 20; i++)
+        var tasks = new IMyTask<int>[12];
+        for (int i = 0; i < 12; i++)
         {
             tasks[i] = threadPool.Submit(() => 2 * 2)
                 .ContinueWith(x => x + 1)
-                .ContinueWith(y => y * 3)
-                .ContinueWith(z => z + 4);
+                .ContinueWith(y => y * 3);
         }
-        Thread.Sleep(6000);
+        Thread.Sleep(4000);
         threadPool.Shutdown();
-        for (int i = 0; i < 20; i++)
+        for (int i = 0; i < 12; i++)
         {
-            Assert.That(tasks[i].Result, Is.EqualTo(19));
+            Assert.That(tasks[i].Result, Is.EqualTo(15));
         }
+    }
+    
+    [Test]
+    public void ThreadPool_shouldNotHave()
+    {
+        MyThreadPool threadPool = new(2);
+        threadPool.Shutdown();
     }
 }

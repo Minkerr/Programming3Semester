@@ -5,12 +5,13 @@ namespace MyThreadPool;
 /// <summary>
 /// Class that implements pool of threads that can execute tasks concurrently 
 /// </summary>
-public partial class MyThreadPool
+public class MyThreadPool
 {
     private readonly CancellationTokenSource shutdownCancellationTokenSource = new();
     private readonly ConcurrentQueue<Action> tasks = new();
     private ManualResetEvent threadResetEvent = new (true); 
     private Thread[] threads;
+    private object locker = new();
 
     public MyThreadPool(int threadNumber)
     {
@@ -39,17 +40,23 @@ public partial class MyThreadPool
     public IMyTask<TResult> Submit<TResult>(Func<TResult> func)
     {
         var task = new MyTask<TResult>(func, shutdownCancellationTokenSource.Token, this);
-        shutdownCancellationTokenSource.Token.ThrowIfCancellationRequested();
-        tasks.Enqueue(() => task.Execute());
-        threadResetEvent.Set();
+        lock (locker)
+        {
+            shutdownCancellationTokenSource.Token.ThrowIfCancellationRequested();
+            tasks.Enqueue(() => task.Execute());
+            threadResetEvent.Set();
+        }
         return task;
     }
 
-    private void SubmitContinueAction(Action task)
+    public void SubmitContinueAction(Action task)
     {
-        shutdownCancellationTokenSource.Token.ThrowIfCancellationRequested();
-        tasks.Enqueue(task);
-        threadResetEvent.Set();
+        lock (locker)
+        {
+            shutdownCancellationTokenSource.Token.ThrowIfCancellationRequested();
+            tasks.Enqueue(task);
+            threadResetEvent.Set();
+        }
     }
 
     /// <summary>
