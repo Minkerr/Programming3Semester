@@ -39,7 +39,8 @@ public class MyThreadPool
     /// </summary>
     public IMyTask<TResult> Submit<TResult>(Func<TResult> func)
     {
-        var task = new MyTask<TResult>(func, shutdownCancellationTokenSource.Token, this);
+        var task = new MyTask<TResult>(
+            func, shutdownCancellationTokenSource.Token, this, locker);
         lock (locker)
         {
             shutdownCancellationTokenSource.Token.ThrowIfCancellationRequested();
@@ -64,7 +65,10 @@ public class MyThreadPool
     /// </summary>
     public void Shutdown()
     {
-        shutdownCancellationTokenSource.Cancel();
+        lock (locker)
+        {
+            shutdownCancellationTokenSource.Cancel();
+        }
         
         foreach (var thread in threads)
         {

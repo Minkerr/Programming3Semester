@@ -16,11 +16,15 @@ public class MyTask<TResult> : IMyTask<TResult>
     private readonly ConcurrentQueue<Action> continuingTasks = new();
     private object locker = new();
 
-    public MyTask(Func<TResult> func, CancellationToken token, MyThreadPool pool)
+    public MyTask(Func<TResult> func,
+        CancellationToken token,
+        MyThreadPool pool,
+        Object locker)
     {
         this.func = func;
         shutdownToken = token;
         threadPool = pool;
+        this.locker = locker;
     }
 
     /// <summary>
@@ -58,7 +62,8 @@ public class MyTask<TResult> : IMyTask<TResult>
     /// </summary>
     public IMyTask<TNewResult> ContinueWith<TNewResult>(Func<TResult, TNewResult> continueMethod)
     {
-        var nextTask = new MyTask<TNewResult>(() => continueMethod(Result), shutdownToken, threadPool);
+        var nextTask = new MyTask<TNewResult>(
+            () => continueMethod(Result), shutdownToken, threadPool, locker);
         continuingTasks.Enqueue(() => nextTask.Execute());
         lock (locker)
         {
