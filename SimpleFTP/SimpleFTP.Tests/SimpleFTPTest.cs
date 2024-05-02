@@ -6,11 +6,11 @@ namespace SimpleFTP.Tests;
 
 public class Tests
 {
-    private const int port = 8888;
-    private const string host = "localhost";
-    private readonly Server server = new(port);
-    private readonly Client client = new(port, host);
-    private Client[] clients = [new(port, host), new(port, host), new(port, host)];
+    private const int Port = 8888;
+    private const string Host = "localhost";
+    private readonly Server server = new(Port);
+    private readonly Client client = new(Port, Host);
+    private Client[] clients = [new(Port, Host), new(Port, Host), new(Port, Host)];
 
     [OneTimeSetUp]
     public void Setup()

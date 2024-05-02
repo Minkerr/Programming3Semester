@@ -46,7 +46,7 @@ public class Client(int port, string hostName)
         var stringResponse = await reader.ReadLineAsync();
         if (stringResponse == null)
         {
-            throw new NullReferenceException();
+            throw new InvalidOperationException();
         }
         var response = stringResponse.Split();
 
@@ -73,10 +73,10 @@ public class Client(int port, string hostName)
     {
         var sizeParse = new List<byte>();
 
-        int readByte;
-        while ((readByte = stream.ReadByte()) != ' ')
+        int buffer;
+        while ((buffer = stream.ReadByte()) != ' ')
         {
-            sizeParse.Add((byte) readByte);
+            sizeParse.Add((byte) buffer);
         }
 
         var size = int.Parse(Encoding.UTF8.GetString(sizeParse.ToArray()));

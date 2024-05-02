@@ -28,7 +28,7 @@ public class Server(int port)
             tasks.Add(ProcessClient(client, tokenSource.Token));
         }
         
-        Task.WaitAll(tasks.ToArray());
+        await Task.WhenAll(tasks.ToArray());
     }
 
     /// <summary>

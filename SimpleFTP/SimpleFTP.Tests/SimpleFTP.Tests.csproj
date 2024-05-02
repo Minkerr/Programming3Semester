@@ -23,12 +23,14 @@
     </ItemGroup>
 
     <ItemGroup>
-      <None Update="Test\Folder\test.txt">
+      <None Remove="Test\test.txt" />
+      <Resource Include="Test\test.txt">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      </None>
-      <None Update="Test\test.txt">
+      </Resource>
+      <None Remove="Test\Folder\test.txt" />
+      <Resource Include="Test\Folder\test.txt">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      </None>
+      </Resource>
     </ItemGroup>
 
 </Project>
