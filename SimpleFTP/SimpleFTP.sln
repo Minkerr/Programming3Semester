@@ -1,0 +1,28 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimpleFTPServer", "SimpleFTPServer\SimpleFTPServer.csproj", "{63A94464-0DB0-4C27-A1A7-CC46446E4215}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimpleFTPClient", "SimpleFTPClient\SimpleFTPClient.csproj", "{2E1F0D19-B664-4B62-9B68-7EE91C839B0C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimpleFTP.Tests", "SimpleFTP.Tests\SimpleFTP.Tests.csproj", "{3CAA101B-88D8-4906-891D-15955DC56C6C}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{63A94464-0DB0-4C27-A1A7-CC46446E4215}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{63A94464-0DB0-4C27-A1A7-CC46446E4215}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{63A94464-0DB0-4C27-A1A7-CC46446E4215}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{63A94464-0DB0-4C27-A1A7-CC46446E4215}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2E1F0D19-B664-4B62-9B68-7EE91C839B0C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2E1F0D19-B664-4B62-9B68-7EE91C839B0C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2E1F0D19-B664-4B62-9B68-7EE91C839B0C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2E1F0D19-B664-4B62-9B68-7EE91C839B0C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3CAA101B-88D8-4906-891D-15955DC56C6C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3CAA101B-88D8-4906-891D-15955DC56C6C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3CAA101B-88D8-4906-891D-15955DC56C6C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3CAA101B-88D8-4906-891D-15955DC56C6C}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
